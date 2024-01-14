@@ -84,7 +84,7 @@
 |main/startup_stm32f103.s|383行|定义ROM接口地址表|
 |main/startup_stm32f103.s|388行|定义插件接口桩函数地址表，需要填入对应数量的桩函数|
 
-分支add_interface演示了如何增加一个接口，可与主分支的比较具体修改：https://github.com/ntdll1/plugin_demo/compare/add_interface...main
+分支add_interface演示了如何增加一个接口，可与主分支的比较具体修改：https://github.com/ntdll1/plugin_demo/compare/main...add_interface
 
 ## FLASH/RAM布局定义
 
