@@ -46,9 +46,9 @@
 |   |- makefile             编译脚本
 |   |- startup_stm32f103.s  主入口、ROM和插件接口地址表
 |   └- STM32F103C6_FLASH.ld 链接脚本
-└- openblt      开源bootloader库openblt
-   |- Host      固件下载软件
-   └- Target    bootloader实现
+└- openblt              开源bootloader库openblt
+   |- Host                 固件下载软件
+   └- Target               bootloader实现
 ```
 
 ## 接口定义
@@ -84,10 +84,7 @@
 |main/startup_stm32f103.s|383行|定义ROM接口地址表|
 |main/startup_stm32f103.s|388行|定义插件接口桩函数地址表，需要填入对应数量的桩函数|
 
-例如要增加一个定时器回调接口，即主程序每隔固定时间调用插件。
-``` diff
-
-```
+分支add_interface演示了如何增加一个接口，可与主分支的比较具体修改。
 
 ## FLASH/RAM布局定义
 
@@ -137,6 +134,13 @@
 
 
 ## 编译
+
+拉取代码
+``` bash
+git clone https://github.com/ntdll1/plugin_demo.git
+cd plugin_demo
+git submodule update --init
+```
 
 ### Windows
 ``` bat
@@ -207,7 +211,7 @@ bootloader烧写后，在下载主程序前，正常可以看到LED快速闪烁�
 ### 下载主程序
 
 #### Windows
-1. 运行openblt/MicroBoot.exe
+1. 运行openblt/Host/MicroBoot.exe
 2. 点击Settings...
 3. 接口选择XCP on RS232
 4. 设备选择对应串口
