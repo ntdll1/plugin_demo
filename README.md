@@ -129,7 +129,7 @@
 |main/STM32F103C6_FLASH.ld|44行|定义主程序使用的FLASH，一般在bootloader后|
 |main/STM32F103C6_FLASH.ld|35、43行|定义主程序使用的RAM和栈，一般为RAM前面一大部分|
 |plugin/STM32F103C6_FLASH.ld|42行|定义插件使用的FLASH|
-|plugin/STM32F103C6_FLASH.ld|41行|定义插件使用的RAM和栈，一般为RAM后面一小部分|
+|plugin/STM32F103C6_FLASH.ld|41行|定义插件使用的RAM，一般为RAM后面一小部分|
 |plugin/plugin.h|4、5行|定义ROM接口地址表和插件接口地址表的存放位置，此文件主程序和插件共用|
 
 
