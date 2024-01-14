@@ -40,7 +40,6 @@
 |- plugin               插件
 |   |- bin                  编译好的二进制
 |   |- obj                  编译中间文件
-|   |- main.c               c程序入口
 |   |- plugin.c             插件接口实现
 |   |- plugin.h             ROM接口插件接口和定义，与主程序共享
 |   |- makefile             编译脚本
