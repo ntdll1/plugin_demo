@@ -31,7 +31,8 @@
 ****************************************************************************************/
 #include "stm32f1xx.h"                                 /* STM32 registers and drivers  */
 #include "timer.h"                                     /* Timer driver                 */
-
+/* 包含插件接口定义头文件 */
+#include "../plugin/plugin.h"
 
 /************************************************************************************//**
 ** \brief     Initializes the timer.
@@ -72,6 +73,9 @@ void SysTick_Handler(void)
   HAL_IncTick();
   /* Invoke the system tick handler. */
   HAL_SYSTICK_IRQHandler();
+
+  /* 调用插件定时器接口 */
+  PLUGIN_INTERFACE->handle_timer();
 } /*** end of SysTick_Handler ***/
 
 

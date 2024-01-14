@@ -73,3 +73,5 @@ LoopFillZerobss:
 .word plugin_entry
 .word plugin_loop
 .word plugin_handle_serial
+/* 在插件接口表中增加新接口地址 */
+.word plugin_handle_timer

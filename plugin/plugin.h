@@ -18,5 +18,7 @@ struct plugin_interface
     void (*entry)(void);
     void (*loop)(void);
     int (*handle_serial)(void *, size_t);
+    /* 增加接口定义 */
+    int (*handle_timer)(void);
 };
 #define PLUGIN_INTERFACE ((struct plugin_interface *)PLIGIN_INTERFACE_ADDR)

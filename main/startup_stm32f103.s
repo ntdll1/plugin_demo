@@ -389,6 +389,8 @@ g_pfnVectors:
   .word plugin_stub
   .word plugin_stub
   .word plugin_stub
+  /* 对应增加桩函数 */
+  .word plugin_stub
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
