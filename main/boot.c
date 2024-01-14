@@ -32,6 +32,7 @@
 #include "../bl/blt_conf.h"                          /* bootloader configuration     */
 #include "stm32f1xx.h"                                 /* STM32 registers and drivers  */
 #include "boot.h"                                      /* bootloader interface driver  */
+#include "timer.h"                                     /* Timer driver                 */
 
 
 /****************************************************************************************

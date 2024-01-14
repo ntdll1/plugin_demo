@@ -1,8 +1,8 @@
 # plugin demo
 
 本项目旨在演示如何在STM32中使用插件功能，分为主程序、插件、引导程序三部分：
-* 主程序：中实现设备的主要逻辑，并为插件提供交互接口，也称为ROM
-* 插件：由主程序调用，通过调用主程序暴露的接口实现扩展逻辑
+* 主程序：实现设备的主要逻辑，并为插件提供交互接口，也称为ROM；
+* 插件：由主程序在不同时机调用不同入口，并调用主程序提供的接口实现扩展逻辑；
 * 引导程序：固件更新的实现，基于开源openblt，可分别烧写主程序和插件。
 
 演示程序基于STM32F103最小开发板BluePill https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill.html 不过这里用的是阉割版（C6T6），配置是32k FLASH和10k RAM，可以兼容C8T6版本。
@@ -142,45 +142,41 @@ cd plugin_demo
 git submodule update --init
 ```
 
+工具链可以从 https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/ 下载，或者用其他IDE自带的
+
 ### Windows
 ``` bat
-REM 设置arm工具链目录
-set TOOL_PATH=d:\toolchain-gccarmnoneeabi\bin
-
 REM 编译引导程序
 cd bl
-make
+make TOOL_PATH=d:\toolchain-gccarmnoneeabi\bin
 cd ..
 
 REM 编译主程序
 cd main
-make
+make TOOL_PATH=d:\toolchain-gccarmnoneeabi\bin
 cd ..
 
 REM 编译插件
 cd plugin
-make
+make TOOL_PATH=d:\toolchain-gccarmnoneeabi\bin
 cd ..
 ```
 
 ### Linux/Mac
 ``` bash
-# 设置arm工具链目录
-export TOOL_PATH=$HOME/toolchain-gccarmnoneeabi/bin/
-
 # 编译引导程序
 cd bl
-make
+make TOOL_PATH=$HOME/toolchain-gccarmnoneeabi/bin/
 cd ..
 
 # 编译主程序
 cd main
-make
+make TOOL_PATH=$HOME/toolchain-gccarmnoneeabi/bin/
 cd ..
 
 # 编译插件
 cd plugin
-make
+make TOOL_PATH=$HOME/toolchain-gccarmnoneeabi/bin/
 cd ..
 ```
 

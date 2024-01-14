@@ -1,4 +1,4 @@
-#include "../plugin.h"
+#include "plugin.h"
 
 void plugin_init(void)
 {
