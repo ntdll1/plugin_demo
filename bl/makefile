@@ -28,7 +28,7 @@ SHELL = sh
 #|--------------------------------------------------------------------------------------|
 #| Configure project name                                                               |
 #|--------------------------------------------------------------------------------------|
-PROJ_NAME=bl_stm32f103
+PROJ_NAME=bl_stm32f411
 
 
 #|--------------------------------------------------------------------------------------|
@@ -62,11 +62,11 @@ PROJ_FILES  = $(filter-out flash_layout.c, $(call rwildcard, , *.c *.h *.s))
 PROJ_FILES += $(wildcard ../openblt/Target/Source/*.c)
 PROJ_FILES += $(wildcard ../openblt/Target/Source/*.h)
 # Collect bootloader port files
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM3_STM32F1/*.c)
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM3_STM32F1/*.h)
+PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/*.c)
+PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/*.h)
 # Collect bootloader port compiler specific files
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM3_STM32F1/GCC/*.c)
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM3_STM32F1/GCC/*.h)
+PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/GCC/*.c)
+PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/GCC/*.h)
 
 
 #|--------------------------------------------------------------------------------------|
@@ -106,12 +106,12 @@ STDFLAGS   += -fdata-sections -ffunction-sections -Wall -g -Wno-strict-aliasing
 OPTFLAGS    = -Os
 DEPFLAGS  = -MT $@ -MMD -MP -MF $(OBJ_PATH)/$*.d
 CFLAGS      = $(STDFLAGS) $(OPTFLAGS)
-CFLAGS     += -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32F103xB
+CFLAGS     += -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32F411xE
 CFLAGS     += -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"
 CFLAGS     += $(INC_PATH)
 AFLAGS      = $(CFLAGS)
 LFLAGS      = $(STDFLAGS) $(OPTFLAGS)
-LFLAGS     += -T"STM32F103C6_FLASH.ld" -Wl,-Map=$(BIN_PATH)/$(PROJ_NAME).map
+LFLAGS     += -T"STM32F411CEUx_FLASH.ld" -Wl,-Map=$(BIN_PATH)/$(PROJ_NAME).map
 LFLAGS     += -Wl,--gc-sections $(LIB_PATH)
 OFLAGS      = -O srec
 ODFLAGS     = -x

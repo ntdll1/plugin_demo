@@ -37,10 +37,8 @@ static const tFlashSector flashLayout[] =
    * interfaces enabled. when for example only UART is needed, than the space required
    * for the bootloader can be made a lot smaller here.
    */
-  /* { 0x08000000, 0x02000 },           flash sector  0 - reserved for bootloader   */
-  { 0x08002000, 0x02000 },           /* flash sector  1 - 8kb                       */
-  { 0x08004000, 0x02000 },           /* flash sector  2 - 8kb                       */
-  { 0x08006000, 0x02000 },           /* flash sector  3 - 8kb                       */
+  /* { 0x08000000, 0x04000 },           flash sector  0 - reserved for bootloader   */
+  { 0x08006000, 0x20000 },           /* flash sector  7 - 128kb                     */
 };
 
 

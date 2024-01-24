@@ -1,12 +1,12 @@
 /************************************************************************************//**
-* \file         Demo/ARMCM3_STM32F1_Nucleo_F103RB_GCC/Boot/hooks.c
+* \file         Demo/ARMCM4_STM32F4_Olimex_STM32P405_GCC/Boot/hooks.c
 * \brief        Bootloader callback source file.
-* \ingroup      Boot_ARMCM3_STM32F1_Nucleo_F103RB_GCC
+* \ingroup      Boot_ARMCM4_STM32F4_Olimex_STM32P405_GCC
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
-*   Copyright (c) 2012  by Feaser    http://www.feaser.com    All rights reserved
+*   Copyright (c) 2017  by Feaser    http://www.feaser.com    All rights reserved
 *
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
@@ -20,9 +20,9 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 * PURPOSE. See the GNU General Public License for more details.
 *
-* You have received a copy of the GNU General Public License along with OpenBLT. It 
+* You have received a copy of the GNU General Public License along with OpenBLT. It
 * should be located in ".\Doc\license.html". If not, contact Feaser to obtain a copy.
-* 
+*
 * \endinternal
 ****************************************************************************************/
 
@@ -31,8 +31,10 @@
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
 #include "led.h"                                 /* LED driver header                  */
-#include "stm32f1xx.h"                           /* STM32 registers and drivers        */
-#include "stm32f1xx_ll_gpio.h"                   /* STM32 LL GPIO header               */
+#include "stm32f4xx.h"                           /* STM32 registers and drivers        */
+#include "stm32f4xx_ll_gpio.h"                   /* STM32 LL GPIO header               */
+#include "stm32f4xx_ll_usart.h"                  /* STM32 LL USART header              */
+#include "stm32f4xx_ll_bus.h"                    /* STM32 LL BUS header                */
 
 
 /****************************************************************************************
@@ -82,7 +84,7 @@ blt_bool CpuUserProgramStartHook(void)
   /* additional and optional backdoor entry through the pushbutton on the board. to
    * force the bootloader to stay active after reset, keep it pressed during reset.
    */
-  if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_2) == 1)
+  if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_2) != 0)
   {
     /* pushbutton pressed, so do not start the user program and keep the
      * bootloader active instead.
@@ -147,7 +149,7 @@ void CopServiceHook(void)
 #if (BOOT_NVM_HOOKS_ENABLE > 0)
 /************************************************************************************//**
 ** \brief     Callback that gets called at the start of the internal NVM driver
-**            initialization routine. 
+**            initialization routine.
 ** \return    none.
 **
 ****************************************************************************************/
@@ -168,9 +170,9 @@ void NvmReinitHook(void)
 
 
 /************************************************************************************//**
-** \brief     Callback that gets called at the start of the NVM driver write 
+** \brief     Callback that gets called at the start of the NVM driver write
 **            routine. It allows additional memory to be operated on. If the address
-**            is not within the range of the additional memory, then 
+**            is not within the range of the additional memory, then
 **            BLT_NVM_NOT_IN_RANGE must be returned to indicate that the data hasn't
 **            been written yet.
 ** \param     addr Start address.
@@ -188,7 +190,7 @@ blt_int8u NvmWriteHook(blt_addr addr, blt_int32u len, blt_int8u *data)
 
 
 /************************************************************************************//**
-** \brief     Callback that gets called at the start of the NVM driver erase 
+** \brief     Callback that gets called at the start of the NVM driver erase
 **            routine. It allows additional memory to be operated on. If the address
 **            is not within the range of the additional memory, then
 **            BLT_NVM_NOT_IN_RANGE must be returned to indicate that the memory
@@ -236,7 +238,7 @@ blt_bool NvmVerifyChecksumHook(void)
 **            performed once the entire user program has been programmed. Through
 **            the checksum, the bootloader can check if a valid user programming is
 **            present and can be started.
-** \return    BLT_TRUE if successful, BLT_FALSE otherwise. 
+** \return    BLT_TRUE if successful, BLT_FALSE otherwise.
 **
 ****************************************************************************************/
 blt_bool NvmWriteChecksumHook(void)
@@ -252,8 +254,8 @@ blt_bool NvmWriteChecksumHook(void)
 
 #if (BOOT_XCP_SEED_KEY_ENABLE > 0)
 /************************************************************************************//**
-** \brief     Provides a seed to the XCP master that will be used for the key 
-**            generation when the master attempts to unlock the specified resource. 
+** \brief     Provides a seed to the XCP master that will be used for the key
+**            generation when the master attempts to unlock the specified resource.
 **            Called by the GET_SEED command.
 ** \param     resource  Resource that the seed if requested for (XCP_RES_XXX).
 ** \param     seed      Pointer to byte buffer wher the seed will be stored.
@@ -274,8 +276,8 @@ blt_int8u XcpGetSeedHook(blt_int8u resource, blt_int8u *seed)
 
 
 /************************************************************************************//**
-** \brief     Called by the UNLOCK command and checks if the key to unlock the 
-**            specified resource was correct. If so, then the resource protection 
+** \brief     Called by the UNLOCK command and checks if the key to unlock the
+**            specified resource was correct. If so, then the resource protection
 **            will be removed.
 ** \param     resource  resource to unlock (XCP_RES_XXX).
 ** \param     key       pointer to the byte buffer holding the key.

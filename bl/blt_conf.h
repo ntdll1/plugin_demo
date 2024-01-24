@@ -1,12 +1,12 @@
 /************************************************************************************//**
-* \file         Demo/ARMCM3_STM32F1_Nucleo_F103RB_GCC/Boot/blt_conf.h
+* \file         Demo/ARMCM4_STM32F4_Olimex_STM32P405_GCC/Boot/blt_conf.h
 * \brief        Bootloader configuration header file.
-* \ingroup      Boot_ARMCM3_STM32F1_Nucleo_F103RB_GCC
+* \ingroup      Boot_ARMCM4_STM32F4_Olimex_STM32P405_GCC
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
-*   Copyright (c) 2012  by Feaser    http://www.feaser.com    All rights reserved
+*   Copyright (c) 2017  by Feaser    http://www.feaser.com    All rights reserved
 *
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
@@ -20,7 +20,7 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 * PURPOSE. See the GNU General Public License for more details.
 *
-* You have received a copy of the GNU General Public License along with OpenBLT. It 
+* You have received a copy of the GNU General Public License along with OpenBLT. It
 * should be located in ".\Doc\license.html". If not, contact Feaser to obtain a copy.
 *
 * \endinternal
@@ -46,7 +46,7 @@
 /** \brief Frequency of the external crystal oscillator. */
 #define BOOT_CPU_XTAL_SPEED_KHZ          (8000)
 /** \brief Desired system speed. */
-#define BOOT_CPU_SYSTEM_SPEED_KHZ        (72000)
+#define BOOT_CPU_SYSTEM_SPEED_KHZ        (100000)
 /** \brief Motorola or Intel style byte ordering. */
 #define BOOT_CPU_BYTE_ORDER_MOTOROLA     (0)
 /** \brief Enable/disable hook function call right before user program start. */
@@ -133,7 +133,7 @@
 /** \brief Enable/disable the NVM hook function for supporting additional memory devices. */
 #define BOOT_NVM_HOOKS_ENABLE           (0)
 /** \brief Configure the size of the default memory device (typically flash EEPROM). */
-#define BOOT_NVM_SIZE_KB                (32)
+#define BOOT_NVM_SIZE_KB                (512)
 /** \brief Enable/disable hooks functions to override the user program checksum handling. */
 #define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (0)
 
@@ -153,6 +153,7 @@
  *         than is needed for this demo.
  */
 #define BOOT_FLASH_CUSTOM_LAYOUT_ENABLE (1)
+
 
 
 /****************************************************************************************

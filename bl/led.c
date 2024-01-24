@@ -1,12 +1,12 @@
 /************************************************************************************//**
-* \file         Demo/ARMCM3_STM32F1_Nucleo_F103RB_GCC/Boot/led.c
+* \file         Demo/ARMCM4_STM32F4_Olimex_STM32P405_GCC/Boot/led.c
 * \brief        LED driver source file.
-* \ingroup      Boot_ARMCM3_STM32F1_Nucleo_F103RB_GCC
+* \ingroup      Boot_ARMCM4_STM32F4_Olimex_STM32P405_GCC
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
-*   Copyright (c) 2018  by Feaser    http://www.feaser.com    All rights reserved
+*   Copyright (c) 2017  by Feaser    http://www.feaser.com    All rights reserved
 *
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
@@ -31,8 +31,8 @@
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
 #include "led.h"                                 /* module header                      */
-#include "stm32f1xx.h"                           /* STM32 registers and drivers        */
-#include "stm32f1xx_ll_gpio.h"                   /* STM32 LL GPIO header               */
+#include "stm32f4xx.h"                           /* STM32 registers and drivers        */
+#include "stm32f4xx_ll_gpio.h"                   /* STM32 LL GPIO header               */
 
 
 /****************************************************************************************
