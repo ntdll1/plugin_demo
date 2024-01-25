@@ -3,6 +3,8 @@
 
 extern UART_HandleTypeDef huart2;
 
+extern uint16_t led_interval;
+
 int rom_get_tick() {
     return HAL_GetTick();
 }
@@ -18,6 +20,10 @@ int rom_send_uart(uint8_t *buf, uint16_t len)
 
 int rom_send_can(uint16_t id, uint8_t *buf, uint8_t dlc)
 {
+  if (id == 0x1ed && dlc == sizeof(led_interval)) {
+    led_interval = *(uint16_t *)buf;
+  }
+
 //   CAN_TxHeaderTypeDef txMsgHeader;
 //   uint32_t txMsgMailbox;
 //   HAL_StatusTypeDef txStatus;
