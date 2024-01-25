@@ -13,7 +13,7 @@ void plugin_loop(void)
   uint32_t tick = rom_interface->get_tick();
   if (!sent && tick >= 5000) {
     sent = 1;
-    uint16_t val = 500;
+    uint16_t val = 50;
     rom_interface->send_can(0x1ed, (uint8_t *)&val, sizeof(val));
   }
 }
