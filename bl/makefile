@@ -55,18 +55,22 @@ TOOL_PATH=
 #     --> Returns all *.c files in the /lib directory and below
 rwildcard = $(strip $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d)))
 
+PROJ_FILES  = $(filter-out flash_layout.c, $(wildcard *.c))
+PROJ_FILES += $(wildcard *.s)
+PROJ_FILES += $(wildcard *.h)
+
 # Collect all application files in the current directory and its subdirectories, but 
 # exclude flash-layout.c as this one is directly included in a source file, when used.
-PROJ_FILES  = $(filter-out flash_layout.c, $(call rwildcard, , *.c *.h *.s))
+PROJ_FILES += $(call rwildcard, lib, *.c *.h *.s)
 # Collect bootloader core files
 PROJ_FILES += $(wildcard ../openblt/Target/Source/*.c)
 PROJ_FILES += $(wildcard ../openblt/Target/Source/*.h)
 # Collect bootloader port files
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/*.c)
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/*.h)
+PROJ_FILES += $(wildcard OPENBLT_STM32F4_PLUGIN/*.c)
+PROJ_FILES += $(wildcard OPENBLT_STM32F4_PLUGIN/*.h)
 # Collect bootloader port compiler specific files
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/GCC/*.c)
-PROJ_FILES += $(wildcard ../openblt/Target/Source/ARMCM4_STM32F4/GCC/*.h)
+PROJ_FILES += $(wildcard OPENBLT_STM32F4_PLUGIN/GCC/*.c)
+PROJ_FILES += $(wildcard OPENBLT_STM32F4_PLUGIN/GCC/*.h)
 
 
 #|--------------------------------------------------------------------------------------|
