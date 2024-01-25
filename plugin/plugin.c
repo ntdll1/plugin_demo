@@ -1,19 +1,36 @@
 #include "plugin.h"
 
+extern void plugin_entry(void);
+
 void plugin_init(void)
 {
-  
 }
+
+static int sent = 0;
 
 void plugin_loop(void)
 {
-  uint32_t tick = ROM_INTERFACE->get_tick();
-  if (tick >= 5000) {
-    ROM_INTERFACE->write_reg(0x1ed, 500);
+  uint32_t tick = rom_interface->get_tick();
+  if (!sent && tick >= 5000) {
+    sent = 1;
+    uint16_t val = 500;
+    rom_interface->send_can(0x1ed, (uint8_t *)&val, sizeof(val));
   }
 }
 
-void plugin_handle_serial(void)
+int plugin_handle_uart(uint8_t *buf, uint16_t len)
 {
-  
+  return 0;
 }
+
+int plugin_handle_can(uint16_t id, uint8_t *buf, uint8_t dlc)
+{
+  return 0;
+}
+
+const void *plugin_interface_table[] __attribute__((section(".plugin_interface"))) = {
+  plugin_entry,
+  plugin_loop,
+  plugin_handle_uart,
+  plugin_handle_can,
+};

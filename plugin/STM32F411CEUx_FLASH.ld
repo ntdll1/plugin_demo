@@ -1,11 +1,13 @@
 /*
-*****************************************************************************
+******************************************************************************
 **
 
-**  File        : stm32_flash.ld
+**  File        : LinkerScript.ld
 **
-**  Abstract    : Linker script for STM32F103C6 Device with
-**                32KByte FLASH, 10KByte RAM
+**  Author		: STM32CubeMX
+**
+**  Abstract    : Linker script for STM32F411CEUx series
+**                512Kbytes FLASH and 128Kbytes RAM
 **
 **                Set heap size, stack size and stack location according
 **                to application requirements.
@@ -14,16 +16,35 @@
 **
 **  Target      : STMicroelectronics STM32
 **
-**  Environment : Atollic TrueSTUDIO(R)
-**
-**  Distribution: The file is distributed as is, without any warranty
+**  Distribution: The file is distributed “as is,” without any warranty
 **                of any kind.
 **
-**  (c)Copyright Atollic AB.
-**  You may use this file as-is or modify it according to the needs of your
-**  project. This file may only be built (assembled or compiled and linked)
-**  using the Atollic TrueSTUDIO(R) product. The use of this file together
-**  with other tools than Atollic TrueSTUDIO(R) is not permitted.
+*****************************************************************************
+** @attention
+**
+** <h2><center>&copy; COPYRIGHT(c) 2019 STMicroelectronics</center></h2>
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**   1. Redistributions of source code must retain the above copyright notice,
+**      this list of conditions and the following disclaimer.
+**   2. Redistributions in binary form must reproduce the above copyright notice,
+**      this list of conditions and the following disclaimer in the documentation
+**      and/or other materials provided with the distribution.
+**   3. Neither the name of STMicroelectronics nor the names of its contributors
+**      may be used to endorse or promote products derived from this software
+**      without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+** AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+** SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+** CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+** OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **
 *****************************************************************************
 */
@@ -31,28 +52,28 @@
 /* Entry Point */
 ENTRY(plugin_entry)
 
-/* Highest address of the user mode stack */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
+
+rom_interface_base = ORIGIN(ROM_INTERFACE);
 
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20001800, LENGTH = 4K /* last 4k */
-FLASH (rx)      : ORIGIN = 0x8006000, LENGTH = 8K /* 8k after main */
+RAM (xrw)      : ORIGIN = 0x2001D000, LENGTH = 12K
+ROM_INTERFACE (rx)      : ORIGIN = 0x805FF80, LENGTH = 128
+PLUGIN_INTERFACE (rx)      : ORIGIN = 0x8062000, LENGTH = 128
+FLASH (rx)      : ORIGIN = 0x8062080, LENGTH = 120K - 128 - 2 /* skip plugin_stub at last 2 bytes */
 }
 
 /* Define output sections */
 SECTIONS
 {
-  /* The startup code goes first into FLASH */
-  .plugin_vector :
+  .plugin_interface :
   {
-    . = ALIGN(4);
-    KEEP(*(.plugin_vector)) /* Startup code */
-    . = ALIGN(4);
-  } >FLASH
-
+    KEEP(*(.plugin_interface))
+  } >PLUGIN_INTERFACE
+  
   /* The program code and other data goes into FLASH */
   .text :
   {
@@ -142,11 +163,11 @@ SECTIONS
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
-    . = ALIGN(4);
+    . = ALIGN(8);
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
-    . = ALIGN(4);
+    . = ALIGN(8);
   } >RAM
 
   
