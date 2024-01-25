@@ -1,22 +1,22 @@
 #include <stdint.h>
-#include <stdlib.h>
 
-#define ROM_INTERFACE_ADDR 0x8005F80
-#define PLIGIN_INTERFACE_ADDR 0x8006000
-
-struct rom_interface
+typedef struct
 {
     uint32_t (*get_tick)(void);
-    int (*read_reg)(int);
-    int (*write_reg)(int, int);
-    int (*send_serial)(void *, size_t);
-};
-#define ROM_INTERFACE ((struct rom_interface *)ROM_INTERFACE_ADDR)
+    int (*send_uart)(uint8_t *, uint16_t);
+    int (*send_can)(uint16_t, uint8_t *, uint8_t);
+} rom_interface_t;
 
-struct plugin_interface
+extern rom_interface_t *rom_interface;
+
+typedef struct
 {
     void (*entry)(void);
     void (*loop)(void);
-    int (*handle_serial)(void *, size_t);
-};
-#define PLUGIN_INTERFACE ((struct plugin_interface *)PLIGIN_INTERFACE_ADDR)
+    int (*handle_uart)(uint8_t *, uint16_t);
+    int (*handle_can)(uint16_t, uint8_t *, uint8_t);
+} plugin_interface_t;
+
+extern plugin_interface_t *plugin_interface;
+/* bl interface just wraps plugin interface, so they have the same definations */
+extern plugin_interface_t *bl_interface;
