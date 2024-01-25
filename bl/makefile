@@ -117,7 +117,7 @@ AFLAGS      = $(CFLAGS)
 LFLAGS      = $(STDFLAGS) $(OPTFLAGS)
 LFLAGS     += -T"STM32F411CEUx_FLASH.ld" -Wl,-Map=$(BIN_PATH)/$(PROJ_NAME).map
 LFLAGS     += -Wl,--gc-sections $(LIB_PATH)
-OFLAGS      = -O srec
+OFLAGS      = -O ihex
 ODFLAGS     = -x
 SZFLAGS     = -B -d
 RMFLAGS     = -f
@@ -140,9 +140,9 @@ COBJS = $(patsubst %.c,%.o,$(PROJ_CSRCS))
 #| Make ALL                                                                             |
 #|--------------------------------------------------------------------------------------|
 .PHONY: all
-all: $(BIN_PATH)/$(PROJ_NAME).srec
+all: $(BIN_PATH)/$(PROJ_NAME).hex
 
-$(BIN_PATH)/$(PROJ_NAME).srec : $(BIN_PATH)/$(PROJ_NAME).elf
+$(BIN_PATH)/$(PROJ_NAME).hex : $(BIN_PATH)/$(PROJ_NAME).elf
 	@$(OC) $< $(OFLAGS) $@
 	@$(OD) $(ODFLAGS) $< > $(BIN_PATH)/$(PROJ_NAME).map
 	@echo +++ Summary of memory consumption:
