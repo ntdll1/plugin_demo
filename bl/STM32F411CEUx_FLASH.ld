@@ -50,32 +50,43 @@
 */
 
 /* Entry Point */
-ENTRY(Reset_Handler)
+ENTRY(bl_entry)
 
-/* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
-_Min_Stack_Size = 0x400; /* required amount of stack */
+
+rom_interface_base = ORIGIN(ROM_INTERFACE);
+plugin_interface_base = ORIGIN(PLUGIN_INTERFACE);
 
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x2001C000, LENGTH = 8K
-XRAM (xrw)      : ORIGIN = 0x2001E000, LENGTH = 8K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 16K
+RAM (xrw)      : ORIGIN = 0x2001C000, LENGTH = 4K
+XRAM (xrw)      : ORIGIN = 0x2001D000, LENGTH = 12K
+ROM_INTERFACE (rx)      : ORIGIN = 0x805FF80, LENGTH = 128
+BL_INTERFACE (rx)      : ORIGIN = 0x8060000, LENGTH = 128
+FLASH (rx)      : ORIGIN = 0x8060080, LENGTH = 8K - 128
+PLUGIN_INTERFACE (rx)      : ORIGIN = 0x8062000, LENGTH = 128
+PLUGIN_STUB (rx)      : ORIGIN = 0x807FFFE, LENGTH = 2
 }
 
 /* Define output sections */
 SECTIONS
 {
-  /* The startup code goes first into FLASH */
-  .isr_vector :
+  .bl_interface :
   {
-    . = ALIGN(4);
-    KEEP(*(.isr_vector)) /* Startup code */
-    . = ALIGN(4);
-  } >FLASH
+    KEEP(*(.bl_interface))
+  } >BL_INTERFACE
+  
+  .plugin_interface :
+  {
+    KEEP(*(.plugin_interface))
+  } >PLUGIN_INTERFACE
+
+  .plugin_stub :
+  {
+    KEEP(*(.plugin_stub))
+  } >PLUGIN_STUB
 
   /* The program code and other data goes into FLASH */
   .text :
@@ -170,7 +181,6 @@ SECTIONS
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
-    . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
 
