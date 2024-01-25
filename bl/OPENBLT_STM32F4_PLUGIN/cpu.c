@@ -57,12 +57,6 @@ extern blt_bool CpuUserProgramStartHook(void);
 ****************************************************************************************/
 void CpuInit(void)
 {
-  /* bootloader runs in polling mode so disable the global interrupts. this is done for
-   * safety reasons. if the bootloader was started from a running user program, it could 
-   * be that the user program did not properly disable the interrupt generation of 
-   * peripherals.
-   */
-  CpuIrqDisable();
 } /*** end of CpuInit ***/
 
 
@@ -110,22 +104,13 @@ void CpuStartUserProgram(void)
   /* release the communication interface */
   ComFree();
 #endif
-  /* reset the HAL */
-  HAL_DeInit();
   /* reset the timer */
   TimerReset();
-  /* remap user program's vector table */
-  SCB->VTOR = CPU_USER_PROGRAM_VECTABLE_OFFSET & (blt_int32u)0x1FFFFF80;
   /* set the address where the bootloader needs to jump to. this is the address of
    * the 2nd entry in the user program's vector table. this address points to the
    * user program's reset handler.
    */
   pProgResetHandler = (void(*)(void))(*((blt_addr *)CPU_USER_PROGRAM_STARTADDR_PTR));
-  /* The Cortex-M4 core has interrupts enabled out of reset. the bootloader
-   * explicitly disables these for security reasons. Enable them here again, so it does 
-   * not have to be done by the user program.
-   */
-  CpuIrqEnable();
   /* start the user program by activating its reset interrupt service routine */
   pProgResetHandler();
 #if (BOOT_COM_DEFERRED_INIT_ENABLE > 0) && (BOOT_COM_ENABLE > 0)
