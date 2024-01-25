@@ -53,6 +53,8 @@ DMA_HandleTypeDef hdma_usart2_rx;
 uint8_t uart_buf[UART_BUF_SIZE];
 int uart_head = 0;
 
+uint16_t led_interval = 1000;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -140,9 +142,9 @@ int main(void)
   while (1)
   {
     HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-    HAL_Delay(1000);
+    HAL_Delay(led_interval);
     HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-    HAL_Delay(1000);
+    HAL_Delay(led_interval);
     
     /* USER CODE END WHILE */
 
