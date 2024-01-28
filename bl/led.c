@@ -72,12 +72,12 @@ void LedBlinkTask(void)
     if (ledOn == BLT_FALSE)
     {
       ledOn = BLT_TRUE;
-      LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+      LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_14);
     }
     else
     {
       ledOn = BLT_FALSE;
-      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+      LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_14);
     }
     /* schedule the next blink event */
     nextBlinkEvent = TimerGet() + ledBlinkIntervalMs;
@@ -94,7 +94,7 @@ void LedBlinkTask(void)
 void LedBlinkExit(void)
 {
   /* turn the LED off */
-  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+  LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_14);
 } /*** end of LedBlinkExit ***/
 
 
