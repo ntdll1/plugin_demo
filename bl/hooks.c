@@ -38,6 +38,13 @@
 
 #include "../plugin/plugin.h"
 
+#include <string.h>
+#include "flash.h"
+#include "cpu.h"
+
+extern blt_addr xram_base, bl_flash_base;
+extern int bl_flash_length;
+
 extern int plugin_inited;
 
 /****************************************************************************************
@@ -208,12 +215,71 @@ blt_int8u NvmWriteHook(blt_addr addr, blt_int32u len, blt_int8u *data)
 **            operation failed.
 **
 ****************************************************************************************/
+
+blt_bool erase_flash_and_copy_back(blt_addr addr, blt_int32u len)
+{
+  blt_addr   prog_addr;
+  blt_int32u prog_data;
+  blt_int32u word_cnt;
+
+  // erase flash
+  blt_bool result = FlashErase(addr, len);
+  if (result != BLT_TRUE) {
+    // if failed, the flash is assumed to be untouched, or maybe ... ???
+    return result;
+  }
+
+  // then write code back to flash from ram
+
+  /* unlock the flash peripheral to enable the flash control register access. */
+  HAL_FLASH_Unlock();
+
+  /* program all words in the block one by one */
+  for (word_cnt=0; word_cnt<(bl_flash_length/sizeof(blt_int32u)); word_cnt++)
+  {
+    prog_addr = bl_flash_base + (word_cnt * sizeof(blt_int32u));
+    prog_data = *(volatile blt_int32u *)(xram_base + word_cnt * sizeof(blt_int32u));
+    /* keep the watchdog happy */
+    CopService();
+    /* program the word */
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, prog_addr, prog_data) != HAL_OK)
+    {
+      result = BLT_FALSE;
+      break;
+    }
+    /* verify that the written data is actually there */
+    if (*(volatile blt_int32u *)prog_addr != prog_data)
+    {
+      result = BLT_FALSE;
+      break;
+    }
+  }
+
+  /* lock the flash peripheral to disable the flash control register access. */
+  HAL_FLASH_Lock();
+
+  // return to flash
+  return result;
+}
+
 blt_int8u NvmEraseHook(blt_addr addr, blt_int32u len)
 {
   /* mark plugin de-inited when erasing flash before actually  writing new firware */
   plugin_inited = 0;
 
-  return BLT_NVM_NOT_IN_RANGE;
+  /* disable irq when erasing flash to avoid being called by main program */
+  CpuIrqDisable();
+
+  // copy bl flash to ram
+  memcpy((void *)xram_base, (void *)bl_flash_base, bl_flash_length);
+  // jump to ram
+  blt_bool (*erase_flash_and_copy_back_from_ram)(blt_addr addr, blt_int32u len);
+  *(blt_addr *)&erase_flash_and_copy_back_from_ram = (blt_addr)erase_flash_and_copy_back - bl_flash_base + xram_base;
+  blt_bool ret = erase_flash_and_copy_back_from_ram(addr, len);
+
+  CpuIrqEnable();
+
+  return ret ? BLT_NVM_OKAY : BLT_NVM_ERROR;
 } /*** end of NvmEraseHook ***/
 
 
