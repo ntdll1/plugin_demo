@@ -165,11 +165,13 @@ int main(void)
   /* select the start slave bank number (for CAN1). this configuration assigns filter
    * banks 0..13 to CAN1 and 14..27 to CAN2.
    */
-  filterConfig.SlaveStartFilterBank = 0;
+  filterConfig.SlaveStartFilterBank = 14;
   HAL_CAN_ConfigFilter(&hcan1, &filterConfig);
   /* start the CAN peripheral. no need to evaluate the return value as there is nothing
    * we can do about a faulty CAN controller. */
   HAL_CAN_Start(&hcan1);
+  
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 
   /* USER CODE END 2 */
 
