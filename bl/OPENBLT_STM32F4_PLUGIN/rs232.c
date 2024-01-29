@@ -190,6 +190,9 @@ static blt_bool Rs232ReceiveByte(blt_int8u *data)
 {
   if (uart_head != uart_tail) {
     *data = uart_buf[uart_head ++];
+    if (uart_head == UART_BUF_SIZE) {
+      uart_head = 0;
+    }
     return BLT_TRUE;
   }
   return BLT_FALSE;
