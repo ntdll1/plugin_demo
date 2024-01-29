@@ -131,7 +131,7 @@
  * BOOT_NVM_CHECKSUM_HOOKS_ENABLE.
  */
 /** \brief Enable/disable the NVM hook function for supporting additional memory devices. */
-#define BOOT_NVM_HOOKS_ENABLE           (0)
+#define BOOT_NVM_HOOKS_ENABLE           (1)
 /** \brief Configure the size of the default memory device (typically flash EEPROM). */
 #define BOOT_NVM_SIZE_KB                (512)
 /** \brief Enable/disable hooks functions to override the user program checksum handling. */
