@@ -58,7 +58,7 @@ blt_bool OpenBLTHandleCan(blt_int16u id, blt_int8u *data, blt_int8u dlc)
   /* handle only packet with specific ID, as all packets are with same ID, the priority is also meaningless */
   if (id == BOOT_COM_CAN_RX_MSG_ID) {
     int next_can_queue_tail = can_queue_tail + 1;
-    if (next_can_queue_tail == CAN_PACKET_QUEUE_COUNT) {
+    if (next_can_queue_tail == CAN_BUF_SIZE) {
       next_can_queue_tail = 0;
     }
     /* accept packet only if queue not full */
@@ -98,7 +98,7 @@ blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
   if (can_queue_head != can_queue_tail) {
     *(uint64_t *)data = *(uint64_t *)(can_queue_buf[can_queue_head]);
     *len = can_queue_dlc[can_queue_head];
-    if (++ can_queue_head == CAN_PACKET_QUEUE_COUNT) {
+    if (++ can_queue_head == CAN_BUF_SIZE) {
       can_queue_head = 0;
     }
   }
