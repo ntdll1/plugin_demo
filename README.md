@@ -73,8 +73,8 @@
 
 |文件|位置|说明|
 |--|--|--|
-|plugin/plugin.h|7行|定义ROM接口|
-|plugin/plugin.h|16行|定义插件接口|
+|plugin/plugin.h|5-7行|定义ROM接口|
+|plugin/plugin.h|14-17行|定义插件接口|
 |plugin/plugin.c||实现插件接口,定义插件接口地址表|
 |bl/bl_interface.c||实现BL兼容插件接口,定义插件接口地址表|
 |main/rom_interface.c||实现ROM接口,定义ROM接口地址表|
