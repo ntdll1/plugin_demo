@@ -95,6 +95,18 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
   }
 }
 
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
+  CAN_RxHeaderTypeDef rxMsgHeader;
+  uint8_t data[8];
+  if (hcan == &hcan1) {
+    if (HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxMsgHeader, data) == HAL_OK) {
+      // TODO: should modify interface to handle ExtId and RTR frame
+      plugin_interface->handle_can(rxMsgHeader.StdId, data, rxMsgHeader.DLC);
+    }
+  }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -104,6 +116,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  CAN_FilterTypeDef filterConfig;
 
   /* USER CODE END 1 */
 
@@ -138,6 +151,25 @@ int main(void)
 
   /* start plugin timer */
   HAL_TIM_Base_Start_IT(&htim11);
+
+  /* receive all can frames, just for demo purpose */
+  filterConfig.FilterBank = 0;
+  filterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  filterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  filterConfig.FilterIdHigh = 0;
+  filterConfig.FilterIdLow = 0;
+  filterConfig.FilterMaskIdHigh = 0;
+  filterConfig.FilterMaskIdLow = 0;
+  filterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+  filterConfig.FilterActivation = ENABLE;
+  /* select the start slave bank number (for CAN1). this configuration assigns filter
+   * banks 0..13 to CAN1 and 14..27 to CAN2.
+   */
+  filterConfig.SlaveStartFilterBank = 0;
+  HAL_CAN_ConfigFilter(&hcan1, &filterConfig);
+  /* start the CAN peripheral. no need to evaluate the return value as there is nothing
+   * we can do about a faulty CAN controller. */
+  HAL_CAN_Start(&hcan1);
 
   /* USER CODE END 2 */
 

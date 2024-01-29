@@ -2,6 +2,7 @@
 #include "stm32f4xx.h"
 
 extern UART_HandleTypeDef huart2;
+extern CAN_HandleTypeDef hcan1;
 
 extern uint16_t led_interval;
 
@@ -22,24 +23,26 @@ int rom_send_can(uint16_t id, uint8_t *buf, uint8_t dlc)
 {
   if (id == 0x1ed && dlc == sizeof(led_interval)) {
     led_interval = *(uint16_t *)buf;
+    return 1;
   }
 
-//   CAN_TxHeaderTypeDef txMsgHeader;
-//   uint32_t txMsgMailbox;
-//   HAL_StatusTypeDef txStatus;
+  CAN_TxHeaderTypeDef txMsgHeader;
+  uint32_t txMsgMailbox;
+  HAL_StatusTypeDef txStatus;
 
-//   /* configure the message that should be transmitted. */
-//   /* set the 11-bit CAN identifier. */
-//   txMsgHeader.StdId = id;
-//   txMsgHeader.IDE = CAN_ID_STD;
+  /* configure the message that should be transmitted. */
+  /* set the 11-bit CAN identifier. */
+  txMsgHeader.StdId = id;
+  txMsgHeader.IDE = CAN_ID_STD;
 
-//   txMsgHeader.RTR = CAN_RTR_DATA;
-//   txMsgHeader.DLC = dlc;
+  txMsgHeader.RTR = CAN_RTR_DATA;
+  txMsgHeader.DLC = dlc;
 
-//   /* submit the message for transmission. */
-//   txStatus = HAL_CAN_AddTxMessage(&canHandle, &txMsgHeader, data,
-//                                   (uint32_t *)&txMsgMailbox);
-  return 0;
+  /* submit the message for transmission. */
+  txStatus = HAL_CAN_AddTxMessage(&hcan1, &txMsgHeader, buf,
+                                  (uint32_t *)&txMsgMailbox);
+
+  return txStatus == HAL_OK;
 }
 
 void plugin_stub() {
