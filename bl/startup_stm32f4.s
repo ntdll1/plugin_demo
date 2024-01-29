@@ -33,6 +33,10 @@
 .global  rom_interface
 .global  plugin_interface
 
+.global  xram_base
+.global  bl_flash_base
+.global  bl_flash_length
+
 /* start address for the initialization values of the .data section. 
 defined in linker script */
 .word  _sidata
@@ -103,3 +107,10 @@ rom_interface:
 .word rom_interface_base
 plugin_interface:
 .word plugin_interface_base
+
+xram_base:
+.word _xram_base
+bl_flash_base:
+.word _bl_flash_base
+bl_flash_length:
+.word _bl_flash_length

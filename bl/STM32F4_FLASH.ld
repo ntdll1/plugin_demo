@@ -57,6 +57,9 @@ _Min_Heap_Size = 0x200;      /* required amount of heap  */
 
 rom_interface_base = ORIGIN(ROM_INTERFACE);
 plugin_interface_base = ORIGIN(PLUGIN_INTERFACE);
+_xram_base = ORIGIN(XRAM);
+_bl_flash_base = ORIGIN(BL_INTERFACE);
+_bl_flash_length = LENGTH(BL_INTERFACE) + LENGTH(FLASH);
 
 /* Specify the memory areas */
 MEMORY
