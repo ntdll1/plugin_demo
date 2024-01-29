@@ -36,6 +36,9 @@
 #include "stm32f4xx_ll_usart.h"                  /* STM32 LL USART header              */
 #include "stm32f4xx_ll_bus.h"                    /* STM32 LL BUS header                */
 
+#include "../plugin/plugin.h"
+
+extern int plugin_inited;
 
 /****************************************************************************************
 *   B A C K D O O R   E N T R Y   H O O K   F U N C T I O N S
@@ -95,8 +98,11 @@ blt_bool CpuUserProgramStartHook(void)
   /* clean up the LED driver */
   LedBlinkExit();
 
-  /* okay to start the user program */
-  return BLT_TRUE;
+  /* call plugin entry and bypass openblt's default behavior */
+  plugin_interface->entry();
+  /* mark plugin inited, so later handler will be forwarded */
+  plugin_inited = 1;
+  return BLT_FALSE;
 } /*** end of CpuUserProgramStartHook ***/
 #endif /* BOOT_CPU_USER_PROGRAM_START_HOOK > 0 */
 
@@ -204,6 +210,9 @@ blt_int8u NvmWriteHook(blt_addr addr, blt_int32u len, blt_int8u *data)
 ****************************************************************************************/
 blt_int8u NvmEraseHook(blt_addr addr, blt_int32u len)
 {
+  /* mark plugin de-inited when erasing flash before actually  writing new firware */
+  plugin_inited = 0;
+
   return BLT_NVM_NOT_IN_RANGE;
 } /*** end of NvmEraseHook ***/
 

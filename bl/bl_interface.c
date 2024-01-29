@@ -3,16 +3,21 @@
 
 extern void bl_entry(void);
 
+int plugin_inited = 0;
+
 void bl_init(void)
 {
   BootInit();
-  plugin_interface->entry();
+  // plugin entry already called in BootInit
+  // plugin_interface->entry();
 }
 
 void bl_loop(void)
 {
   BootTask();
-  plugin_interface->loop();
+  if (plugin_inited) {
+    plugin_interface->loop();
+  }
 }
 
 int bl_handle_uart(uint8_t *buf, uint16_t len)
@@ -38,7 +43,7 @@ int bl_handle_can(uint16_t id, uint8_t *buf, uint8_t dlc)
     return 1;
   }
 #endif
-  return plugin_interface->handle_can(id, buf, dlc);
+  return plugin_inited ? plugin_interface->handle_can(id, buf, dlc) : 0;
 }
 
 __attribute__((section(".plugin_stub"))) void plugin_stub()
