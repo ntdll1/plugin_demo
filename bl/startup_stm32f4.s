@@ -102,12 +102,14 @@ LoopFillZerobss:
   pop {r3, pc}
 .size  bl_entry, .-bl_entry
 
-  .type  rom_interface, %object
+
+    .section  .data.interface_base
 rom_interface:
 .word rom_interface_base
 plugin_interface:
 .word plugin_interface_base
 
+    .section  .data.section_base
 xram_base:
 .word _xram_base
 bl_flash_base:
