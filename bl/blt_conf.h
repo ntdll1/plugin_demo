@@ -146,7 +146,7 @@
  *         a different checksum location, because this one is added at the end of the
  *         user program's vector table.
  */
-#define BOOT_FLASH_VECTOR_TABLE_CS_OFFSET (0x10c)
+#define BOOT_FLASH_VECTOR_TABLE_CS_OFFSET (0x7C)
 /** \brief Enable support for a custom flash layout table. It is located in
  *         flash_layout.c. This was done because the default flashLayout[] table
  *         in the bootloader's core has more flash memory reserved for the bootloader
