@@ -101,6 +101,7 @@ blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
     if (++ can_queue_head == CAN_BUF_SIZE) {
       can_queue_head = 0;
     }
+    return BLT_TRUE;
   }
 
   return BLT_FALSE;
